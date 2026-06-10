@@ -695,19 +695,35 @@
     html = await inlineLocalAssets(html);
     return html;
   }
+  // For pasting into Gmail/Outlook: hand over only the <body> contents (a
+  // fragment), never a full <!doctype><html><head> document — pasting a whole
+  // document makes Gmail render a stripped fallback AND the real body (the
+  // “two versions” bug). The Download button still gets the full document.
+  function bodyInner(html) {
+    const m = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    return (m ? m[1] : html).trim();
+  }
+  async function getPasteHtml() {
+    return bodyInner(await getExportHtml());
+  }
+  function getPlainText() {
+    return ((state.headlinePre || '') + ' ' + (state.headlineHL || '') + ' ' + (state.headlinePost || ''))
+      .replace(/\s+/g, ' ').trim() || 'OrangeHRM Mobile Newsletter';
+  }
 
   document.getElementById('btn-copy').addEventListener('click', async () => {
-    const htmlPromise = getExportHtml();
-    let copiedRich = false, lastError = null;
+    const htmlPromise = getPasteHtml();
+    const plain = getPlainText();
+    let copiedRich = false;
     if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
       try {
         const item = new ClipboardItem({
           'text/html':  htmlPromise.then((h) => new Blob([h], { type: 'text/html' })),
-          'text/plain': htmlPromise.then((h) => new Blob([h], { type: 'text/plain' }))
+          'text/plain': new Blob([plain], { type: 'text/plain' })
         });
         await navigator.clipboard.write([item]);
         copiedRich = true;
-      } catch (e) { lastError = e; }
+      } catch (e) {}
     }
     if (!copiedRich) {
       try { await navigator.clipboard.writeText(await htmlPromise); }
@@ -792,12 +808,13 @@
       return { email: v, subject: (subjectInput.value || '').trim() };
     }
     async function copyHtmlForPaste() {
-      const htmlPromise = getExportHtml();
+      const htmlPromise = getPasteHtml();
+      const plain = getPlainText();
       try {
         if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
           await navigator.clipboard.write([new ClipboardItem({
             'text/html':  htmlPromise.then((h) => new Blob([h], { type: 'text/html' })),
-            'text/plain': htmlPromise.then((h) => new Blob([h], { type: 'text/plain' }))
+            'text/plain': new Blob([plain], { type: 'text/plain' })
           })]);
           return true;
         }

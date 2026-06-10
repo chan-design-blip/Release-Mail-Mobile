@@ -133,7 +133,7 @@
     const src = d.heroImage || BLANK_HERO;
     return `
     <tr><td class="px" style="padding:0 24px; font-size:0; line-height:0;">
-      <img class="hero" src="${esc(src)}" width="552" height="320" alt="${esc(d.heroAlt || '')}" style="width:100%; height:320px; max-width:552px; object-fit:cover; object-position:center; display:block; border-radius:14px;">
+      <img class="hero" src="${esc(src)}" width="552" alt="${esc(d.heroAlt || '')}" style="width:100%; max-width:552px; height:auto; display:block; border-radius:14px;">
     </td></tr>`;
   }
 
@@ -237,7 +237,7 @@
     const cell = (url, src, alt) => src ? `
           <td align="center" style="padding:6px 7px;">
             <a href="${esc(url || '#')}" target="_blank" style="text-decoration:none;">
-              <img src="${esc(src)}" width="182" alt="${esc(alt)}" style="width:182px; max-width:182px; height:auto; display:block; border:0;">
+              <img src="${esc(src)}" width="184" height="56" alt="${esc(alt)}" style="width:184px; max-width:184px; height:56px; display:block; border:0;">
             </a>
           </td>` : '';
     const cells = cell(d.iosUrl, B.ios, 'Download on the App Store') + cell(d.androidUrl, B.android, 'Get it on Google Play');
@@ -306,7 +306,11 @@
     <tr><td align="center" style="padding:8px 24px 4px 24px;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;">
         <tr><td align="center" bgcolor="#0c0f16" style="padding:13px; background:#0c0f16; background:linear-gradient(160deg,#23272f 0%,#0a0d12 100%); border-radius:40px; box-shadow:0 20px 44px -14px rgba(12,15,22,0.55);">
-          <img src="${esc(src)}" width="${screenW}" alt="${esc(d.highlightsAlt || 'Release highlights')}" style="display:block; width:${screenW}px; max-width:${screenW}px; height:auto; border-radius:26px; border:0;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+            <td style="border-radius:26px; overflow:hidden; background:#000000; line-height:0; font-size:0;">
+              <img src="${esc(src)}" width="${screenW}" alt="${esc(d.highlightsAlt || 'Release highlights')}" style="display:block; width:${screenW}px; max-width:${screenW}px; height:auto; border-radius:26px; border:0;">
+            </td>
+          </tr></table>
         </td></tr>
       </table>
     </td></tr>`;
