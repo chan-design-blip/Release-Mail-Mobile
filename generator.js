@@ -23,7 +23,7 @@
     headlinePre: 'OrangeHRM Advanced Mobile App Version',
     headlineHL: '6.8',
     headlinePost: '',
-    dek: 'A smarter, faster mobile experience \u2014 here\u2019s everything new in this release.',
+    dek: '',
 
     heroImage: A.hero || 'assets/hero-security.png',
     heroAlt: 'OrangeHRM Mobile app on a phone',

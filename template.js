@@ -30,12 +30,12 @@
   const BLANK_GIF =
     'data:image/svg+xml;utf8,' +
     encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300">' +
-        '<rect width="100%" height="100%" fill="%23eef0f5"/>' +
-        '<text x="50%" y="46%" fill="%238a93a6" font-family="Inter,sans-serif" font-size="17" ' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="500">' +
+        '<rect width="100%" height="100%" fill="#11151c"/>' +
+        '<text x="50%" y="47%" fill="#8a93a6" font-family="Inter,sans-serif" font-size="16" ' +
         'text-anchor="middle">Highlights GIF</text>' +
-        '<text x="50%" y="58%" fill="%23aab2c2" font-family="Inter,sans-serif" font-size="12" ' +
-        'text-anchor="middle">Upload an animated GIF in the editor</text></svg>'
+        '<text x="50%" y="53%" fill="#5d6b82" font-family="Inter,sans-serif" font-size="11" ' +
+        'text-anchor="middle">Upload a mobile screen recording</text></svg>'
     );
 
   // ---------- Accent themes ----------
@@ -299,12 +299,21 @@
     const caption = (d.highlightsCaption || '').trim()
       ? `<tr><td class="px" align="center" style="padding:12px 48px 4px 48px; font-family:'Inter',Arial,sans-serif; font-size:13px; line-height:20px; font-weight:500; color:#8a93a6; text-align:center;">${escMulti(d.highlightsCaption)}</td></tr>`
       : '';
+    // Bulletproof phone frame — image sized by width attr (height auto), centered.
+    // No object-fit / overflow crop (Gmail strips those and blows the image up).
+    const screenW = 240;
+    const phone = `
+    <tr><td align="center" style="padding:8px 24px 4px 24px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;">
+        <tr><td align="center" bgcolor="#0c0f16" style="padding:13px; background:#0c0f16; background:linear-gradient(160deg,#23272f 0%,#0a0d12 100%); border-radius:40px; box-shadow:0 20px 44px -14px rgba(12,15,22,0.55);">
+          <img src="${esc(src)}" width="${screenW}" alt="${esc(d.highlightsAlt || 'Release highlights')}" style="display:block; width:${screenW}px; max-width:${screenW}px; height:auto; border-radius:26px; border:0;">
+        </td></tr>
+      </table>
+    </td></tr>`;
     return `
     <tr><td style="height:8px; line-height:8px; font-size:0;">&nbsp;</td></tr>
     ${title}
-    <tr><td class="px" style="padding:0 24px; font-size:0; line-height:0;">
-      <img src="${esc(src)}" width="552" alt="${esc(d.highlightsAlt || 'Release highlights')}" style="width:100%; max-width:552px; height:auto; display:block; border-radius:14px; border:1px solid rgba(56,69,93,0.10);">
-    </td></tr>${caption}`;
+    ${phone}${caption}`;
   }
 
   function renderCTA(d) {
