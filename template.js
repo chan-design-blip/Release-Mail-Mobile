@@ -231,22 +231,22 @@
   }
 
   // Side-by-side App Store / Google Play badge images (linked).
+  // Store buttons as editable TEXT links (Gmail keeps text links through link
+  // edits; embedded images get dropped). Two-line label mimics the store badge.
   function renderAppButtons(d) {
     if (!d.showAppButtons) return '';
-    const B = (typeof window !== 'undefined' && window.STORE_BADGES) || {};
-    // If a host URL is given, link to real PNG files (so Gmail keeps them when
-    // you edit the link). Otherwise embed the data-URL badges (self-contained).
-    const base = (d.assetBaseUrl || '').trim().replace(/\/+$/, '');
-    const iosSrc = base ? base + '/badge-appstore.png' : B.ios;
-    const andSrc = base ? base + '/badge-googleplay.png' : B.android;
-    const cell = (url, src, alt) => src ? `
+    const pill = (url, top, main) => `
           <td align="center" style="padding:6px 7px;">
-            <a href="${esc(url || '#')}" target="_blank" style="text-decoration:none;">
-              <img src="${esc(src)}" width="184" height="56" alt="${esc(alt)}" style="width:184px; max-width:184px; height:56px; display:block; border:0;">
-            </a>
-          </td>` : '';
-    const cells = cell(d.iosUrl, iosSrc, 'Download on the App Store') + cell(d.androidUrl, andSrc, 'Get it on Google Play');
-    if (!cells) return '';
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td align="center" bgcolor="#0d1320" style="background:#0d1320; background:linear-gradient(160deg,#1c2330 0%,#0a0d13 100%); border-radius:11px;">
+                <a href="${esc(url || '#')}" target="_blank" style="display:block; padding:11px 26px; text-decoration:none; font-family:Helvetica,Arial,sans-serif; white-space:nowrap;">
+                  <span style="display:block; font-size:9px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:#aab2c2; line-height:13px; white-space:nowrap;">${esc(top)}</span>
+                  <span style="display:block; font-size:18px; font-weight:700; color:#ffffff; line-height:22px; white-space:nowrap;">${esc(main)}</span>
+                </a>
+              </td>
+            </tr></table>
+          </td>`;
+    const cells = pill(d.iosUrl, 'Download on the', d.iosLabel || 'App Store') + pill(d.androidUrl, 'Get it on', d.androidLabel || 'Google Play');
     return `
       <tr><td style="padding:8px 20px 6px 20px;">
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center"><tr>${cells}</tr></table>
