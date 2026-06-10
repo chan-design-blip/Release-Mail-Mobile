@@ -55,6 +55,7 @@
     compatVersions: 'Compatible with version 8.0',
     showAppButtons: true,
     appButtonsTitle: 'Download the app',
+    assetBaseUrl: '',
     iosLabel: 'App Store',
     iosUrl: 'https://apps.apple.com/',
     androidLabel: 'Google Play',
@@ -594,6 +595,8 @@
     appToggle.innerHTML = '<span><strong>App download buttons</strong><div class="field-hint">Side-by-side App Store / Google Play buttons</div></span>';
     appToggle.appendChild(switchToggle(state.showAppButtons, (v) => { state.showAppButtons = v; scheduleRender(); }));
     body.appendChild(appToggle);
+    body.appendChild(field('Badge image host URL (optional)', textInput(state.assetBaseUrl, (v) => { state.assetBaseUrl = v; scheduleRender(); }, { placeholder: 'https://your-site.vercel.app' }),
+      'Serves badge-appstore.png & badge-googleplay.png from here so badges stay editable in Gmail. Leave blank to embed them.'));
     body.appendChild(field('App Store link (iOS)', textInput(state.iosUrl, (v) => { state.iosUrl = v; scheduleRender(); }, { placeholder: 'https://apps.apple.com/...' }), 'The App Store badge links here'));
     body.appendChild(field('Google Play link (Android)', textInput(state.androidUrl, (v) => { state.androidUrl = v; scheduleRender(); }, { placeholder: 'https://play.google.com/...' }), 'The Google Play badge links here'));
 

@@ -234,13 +234,18 @@
   function renderAppButtons(d) {
     if (!d.showAppButtons) return '';
     const B = (typeof window !== 'undefined' && window.STORE_BADGES) || {};
+    // If a host URL is given, link to real PNG files (so Gmail keeps them when
+    // you edit the link). Otherwise embed the data-URL badges (self-contained).
+    const base = (d.assetBaseUrl || '').trim().replace(/\/+$/, '');
+    const iosSrc = base ? base + '/badge-appstore.png' : B.ios;
+    const andSrc = base ? base + '/badge-googleplay.png' : B.android;
     const cell = (url, src, alt) => src ? `
           <td align="center" style="padding:6px 7px;">
             <a href="${esc(url || '#')}" target="_blank" style="text-decoration:none;">
               <img src="${esc(src)}" width="184" height="56" alt="${esc(alt)}" style="width:184px; max-width:184px; height:56px; display:block; border:0;">
             </a>
           </td>` : '';
-    const cells = cell(d.iosUrl, B.ios, 'Download on the App Store') + cell(d.androidUrl, B.android, 'Get it on Google Play');
+    const cells = cell(d.iosUrl, iosSrc, 'Download on the App Store') + cell(d.androidUrl, andSrc, 'Get it on Google Play');
     if (!cells) return '';
     return `
       <tr><td style="padding:8px 20px 6px 20px;">
